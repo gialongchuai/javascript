@@ -106,7 +106,7 @@ length
 
 // ngoài ra còn nhận vào 2 tham số nữa là index, originArray
 
-function configArray(myCourse, index, originArray) {
+function configArray(myCourse, index, originArray) { // đặt tên gì cũng được không nhất thiết là myCourse
     return {
         id: myCourse.id,
         name: myCourse.name,
@@ -116,7 +116,7 @@ function configArray(myCourse, index, originArray) {
     }
 }
 
-var xinchaoCourse = myCourse.map(configArray);
+var xinchaoCourse = myCourse.map(configArray); // map : reduce
 console.log(xinchaoCourse);
 
 /**

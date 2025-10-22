@@ -80,4 +80,4 @@ console.log(course2);
  * (2) [{…}, {…}]
 0 : {id: 3, name: 'Ruby', coin: 150}
 1 : {id: 5, name: 'PHP', coin: 150}
- */
+ */ 
