@@ -35,4 +35,4 @@ Array.prototype.some2 = function(callback) {
 var isPassed2 = obj.some2(function(object, index, arr) {
     return object.isApplied;
 });
-console.log(isPassed2); // // true : coi 26 .js để hiểu nhé.
+console.log(isPassed2); // // true : coi 26 .js để hiểu nhé. Kì vậy
