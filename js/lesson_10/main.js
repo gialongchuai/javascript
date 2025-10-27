@@ -10,13 +10,13 @@ function Validator(options) {
             //<input id="fullname" name="fullname" type="text" placeholder="VD: Sơn Đặng" class="form-control"></input>
             //<input id="email" name="email" type="text" placeholder="VD: email@domain.com" class="form-control">
             
-            var message = inputEle.parentElement.querySelector('.form-message'); // đứng từ document cha tìm thằng con spane
+            var message = inputEle.parentElement.querySelector('.form-message'); // có được ele của 2 input truy ra thằng cha là thẻ div to ở ngoài, xoNG TỪ THẺ DIV ĐÓ TRUY VÀO THẰNG MESSAGE
             console.log(message); // <span class="form-message">Vui lòng nhập trường này!</span> : những thẻ span được viết sẵn để xuống dưới chèn message vào
 
             // bỏ focus -> console log hiển thị
-            if(inputEle) {
+            if(inputEle) { // NẾU TÌM ĐƯỢC 2 ID LÀ EMAIL VỚI FULLNAME THÌ HĂNG LÀM -> kIỂM TRA NGƯỜI DÙNG CÓ NHẬP HAY KHÔN NHẬP INPUT THÔNG QUA BLUR
                 inputEle.onblur = function() { // do thẻ input nên có inputEle.value : bài trước 
-                    var errorMessage = rule.test(inputEle.value);
+                    var errorMessage = rule.test(inputEle.value); // DO LÀ INPUT NÊN CÓ VALUE VÀ DO ĐÃ CONFIG SẴN HÀM Ở CODE TUỐT Ở DƯỚI ĐỂ TETS CÁI VALUE -> CALLBACK GỌI KÈM VALUE ĐỂ KIỂM TRA
                     // console.log(errorMessage);
                     if(errorMessage) { // Vui lòng .... 
                         message.innerText = errorMessage;
