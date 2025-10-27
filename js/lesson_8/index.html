@@ -1,0 +1,42 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        ul {
+            display: none;
+        }
+
+        input:focus ~ ul {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <a href="https://www.google.com/">Google</a>
+    <br>
+    <a href="https://fullstack.edu.vn/">F8</a>
+    <br>
+    <input placeholder="Tìm kiếm">
+    <ul>
+        <li>Javascript</li>
+        <li>C++</li>
+        <li>Csharp</li>
+    </ul>
+    <br>
+    <br>
+    <div onclick="console.log('DIV')"> <!-- click vào DIV thì div hiện ra console-->
+        DIV
+        <button onclick="console.log('Click me!')">Click me!</button>
+    </div> <!--Click vào button thì Click me ! xong tới DIV hiện tưởng nổi bọt-->
+    <BR></BR>
+    <div class="content">
+        DIV
+        <button class="button">CLICK ME!</button>
+    </div>
+    <br>
+    
+    <script src="./main.js"></script>
+</body>
+</html>
