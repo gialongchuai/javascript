@@ -27,6 +27,7 @@ function Validator(options) {
             //<input id="fullname" name="fullname" type="text" placeholder="VD: Sơn Đặng" class="form-control"></input>
             //<input id="email" name="email" type="text" placeholder="VD: email@domain.com" class="form-control">
             
+            // **** hoặc có thể cho nó 1 key value bên html: selector : 'form-message' và khi dùng tới chỉ cần chấm giống dòng rule.option
             var message = inputEle.parentElement.querySelector('.form-message'); // có được ele của 2 input truy ra thằng cha là thẻ div to ở ngoài, xoNG TỪ THẺ DIV ĐÓ TRUY VÀO THẰNG MESSAGE
             console.log(message); // <span class="form-message">Vui lòng nhập trường này!</span> : những thẻ span được viết sẵn để xuống dưới chèn message vào
 
@@ -47,9 +48,16 @@ function Validator(options) {
             //     }
             // }
 
-            // season 2: thêm hàm validate
             if(inputEle) {
+
+                // season 2: thêm hàm validate : xử lý khi người dùng không còn focus vào form
                 validate(inputEle, rule, message);
+
+                // xử lý khi người dùng bắt đầu nhập mà vẫn còn thông báo lỗi (tức đang nhập cũng bị thông báo lỗi)
+                inputEle.oninput = function() {
+                    message.innerText = '';
+                    message.parentElement.classList.remove('invalid');
+                }
             }
         });
     }
@@ -71,7 +79,17 @@ Validator.isEmail = function(option) {
     return {
         option: option,
         test: function(value) {
-            return value.trim() ? undefined : "Vui lòng nhập trường này!";
+            var regex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+            return regex.test(value) ? undefined : 'Trường này phải là email!'
+        }
+    }
+}
+
+Validator.minLength = function(option, min) {
+    return {
+        option: option,
+        test: function(value) {
+            return value.length >= min ? undefined : `Vui lòng nhập tối tiểu ${min} kí tự!`;
         }
     }
 }
