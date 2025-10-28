@@ -20,11 +20,44 @@ function Validator(options) {
             console.log(message.parentElement);
             message.parentElement.classList.remove('invalid');
         }
+
+        return !errorMessage;
     }
 
     console.log(options); // {form: '#form-1', rules: Array(2)}
     var formElement = document.querySelector(options.form); // bên kia gán là form-1
     if(formElement) { // nếu có giá trị tức là tìm thấy form-1
+
+        // xử lý với form cho nút Đăng kí
+        formElement.onsubmit = function(e) {
+            e.preventDefault(); // ngăn chặn không nhảy trang lỗi nữa khi click vào nút Đăng ký 
+
+            var noError = true;
+
+            // bên cạnh đó khi nhấn vào lặp qua từng rule rồi validate tất cả
+            options.rules.forEach(function(rule) {
+                var inputEle = document.querySelector(rule.option);
+                var message = inputEle.parentElement.querySelector('.form-message');
+                var flag = validate(inputEle, rule, message);
+                if(!flag) {
+                    noError = false;
+                }
+            });
+
+            // if(noError) {
+            //     console.log('Không có lỗi');
+            // } else {
+            //     console.log('Có lỗi');
+            // }
+            if(noError) { // check kiểm tra bắt buộc phải đúng hết thì cho onSubmit bên html thành chữ Son Dang
+                if(typeof options.onSubmit === 'function') {
+                    options.onSubmit({
+                        name: 'Son Dang'
+                    });
+                }
+            }
+        }
+
         options.rules.forEach(function(rule) { // đi qua phần tử thứ 2, do form là phần tử 1 đi rồi, duyệt các rule 
             
             // Lưu lại các rules cho mỗi input
