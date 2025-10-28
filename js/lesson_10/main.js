@@ -1,19 +1,15 @@
 
 
 function validate(inputEle, rule, message) {
-    if(inputEle) { 
-        inputEle.onblur = function() { 
-            var errorMessage = rule.test(inputEle.value);
-            if(errorMessage) { 
-                message.innerText = errorMessage;
-                console.log(message.parentElement); 
-                message.parentElement.classList.add('invalid');
-            } else { 
-                message.innerText = '';
-                console.log(message.parentElement);
-                message.parentElement.classList.remove('invalid');
-            }
-        }
+    var errorMessage = rule.test(inputEle.value);
+    if(errorMessage) { 
+        message.innerText = errorMessage;
+        console.log(message.parentElement); 
+        message.parentElement.classList.add('invalid');
+    } else { 
+        message.innerText = '';
+        console.log(message.parentElement);
+        message.parentElement.classList.remove('invalid');
     }
 }
 
@@ -51,7 +47,9 @@ function Validator(options) {
             if(inputEle) {
 
                 // season 2: thêm hàm validate : xử lý khi người dùng không còn focus vào form
-                validate(inputEle, rule, message);
+                inputEle.onblur = function() { 
+                    validate(inputEle, rule, message);
+                }
 
                 // xử lý khi người dùng bắt đầu nhập mà vẫn còn thông báo lỗi (tức đang nhập cũng bị thông báo lỗi)
                 inputEle.oninput = function() {
@@ -75,7 +73,7 @@ Validator.isRequired = function(option, messageNotif) {
         }
     };
 }
-Validator.isEmail = function(option) {
+Validator.isEmail = function(option, messageNotif) {
     return {
         option: option,
         test: function(value) {
