@@ -67,11 +67,11 @@ function Validator(options) {
 // Nguyên tắc các rules
 // 1. khi có lỗi -> message lỗi
 // 2. Không có lỗi thì ko trả gì (undefined)
-Validator.isRequired = function(option) {
+Validator.isRequired = function(option, messageNotif) {
     return {
         option: option,
         test: function(value) {
-            return value.trim() ? undefined : "Vui lòng nhập trường này!";
+            return value.trim() ? undefined : messageNotif || "Vui lòng nhập trường này!";
         }
     };
 }
@@ -80,16 +80,29 @@ Validator.isEmail = function(option) {
         option: option,
         test: function(value) {
             var regex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-            return regex.test(value) ? undefined : 'Trường này phải là email!'
+            return regex.test(value) ? undefined : messageNotif || 'Trường này phải là email!'
         }
     }
 }
 
-Validator.minLength = function(option, min) {
+Validator.minLength = function(option, min, messageNotif) {
     return {
         option: option,
         test: function(value) {
-            return value.length >= min ? undefined : `Vui lòng nhập tối tiểu ${min} kí tự!`;
+            return value.length >= min ? undefined : messageNotif || `Vui lòng nhập tối tiểu ${min} kí tự!`;
+        }
+    }
+}
+
+Validator.isConfirmed = function(option, getValueConfirmed, messageNotif) {
+    return {
+        option: option,
+        test: function(value) {
+
+            // lưu ý quan trọng là isConfirmed là hàm vào gọi vào 2 tham số
+            // option là id, hàm là giá trị nhập
+            // nhưng để lấy giá trị đó phải callback ngược lại là getValueConfirmed() chứ không phải getValueConfirm : aida hơi bị lú lẫn  cái này quá
+            return value === getValueConfirmed() ? undefined : messageNotif || 'Giá trị nhập vào không chính xác';
         }
     }
 }
