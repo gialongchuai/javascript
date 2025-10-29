@@ -40,6 +40,42 @@
                 <span class="form-message"></span>
             </div>
 
+            <div class="form-group">
+                <label for="avatar" class="form-label">Ảnh đại diện</label>
+                <input id="avatar" name="avatar" type="file" placeholder="Chọn ảnh đại diện" class="form-control">
+                <span class="form-message"></span>
+            </div>
+
+            <div class="form-group">
+                <label for="province" class="form-label">Vui lòng chọn tỉnh/thành phố</label>
+                <select name="province" id="province" style="margin-top: 5px; height: 30px;">
+                    <option value="">--Chọn tỉnh/thành phố--</option>
+                    <option value="hochiminh">Hồ Chí Minh</option>
+                    <option value="hanoi">Hà Nội</option>
+                </select>
+                <span class="form-message"></span>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Giới tính</label>
+                <div style="display: flex; margin-left: 20px; font-size: 12px;">
+                    <input name="gender" value="male" type="radio"> Nam
+                    <input name="gender" value="female" type="radio" style="margin-left: 20px;"> Nữ
+                    <input name="gender" value="other" type="radio" style="margin-left: 20px;"> Khác
+                </div>
+                <span class="form-message"></span>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Mức độ hài lòng của bạn</label>
+                <div style="display: flex; margin-left: 20px; font-size: 12px;">
+                    <input name="feeling" value="ratthich" type="checkbox"> Rất thích
+                    <input name="feeling" value="tuyetvoi" type="checkbox" style="margin-left: 20px;"> Tuyệt vời
+                    <input name="feeling" value="luon" type="checkbox" style="margin-left: 20px;"> Lượn
+                </div>
+                <span class="form-message"></span>
+            </div>
+
             <button class="form-submit">Đăng ký</button>
         </form>
     </div>
@@ -61,7 +97,11 @@
             Validator.isRequired('#password_confirmation'),
             Validator.isConfirmed('#password_confirmation', function() {
                 return document.querySelector('#form-1 #password').value;
-            }, 'Mật khẩu nhập lại không chính xác')
+            }, 'Mật khẩu nhập lại không chính xác'),
+            Validator.isRequired('#avatar'),
+            Validator.isRequired('#province'),
+            Validator.isRequired('input[name="gender"]'), // mong muốn là input[name="gender"]:checked từng là được tick thì mới thỏa
+            Validator.isRequired('input[name="feeling"]') // mong muốn là input[name="feeling"]:checked từng là được tick thì mới thỏa
         ],
         onSubmit: function(data) {
             // thay vì console.log dữ liệu bên kia gọi ra thì => call api backend

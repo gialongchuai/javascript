@@ -1,13 +1,26 @@
 function Validator(options) {
+
+    //object với key value : key lưu option còn value là các rules
     var optionRules = {};
     
     function validate(inputEle, rule, message) {
         //var errorMessage = rule.test(inputEle.value);
         var errorMessage;
         
+        // truy cập option trong object ở trên để lấy all rules của option
         var arrayRules = optionRules[rule.option];
         for(var i=0; i<arrayRules.length; i++) {
-            errorMessage = arrayRules[i](inputEle.value); // hàm khá lạ so với dòng số 5
+            switch(inputEle.type) {
+                case 'radio':
+                case 'checkbox': // nhưng đối với radio và checkbox thì truyền và kiểm tra cái checked
+                    // errorMessage = arrayRules[i](formElement.querySelector(rule.option) + ':checked');
+                    // trời ơi là trời truyền cái value mà viết nhầm dòng trên ngồi mò cả buổi
+                    // như này này 
+                    errorMessage = arrayRules[i](formElement.querySelector(rule.option + ':checked'));
+                    break;
+                default: // mặc định gọi tới test call back kiểm tra value của input nhập
+                    errorMessage = arrayRules[i](inputEle.value); // hàm khá lạ so với dòng số 7
+            }
             if(errorMessage) break; // nếu bắt gặp lỗi đầu tiên thì break luôn khỏi xét lỗi thứ 2
         }
 
@@ -86,7 +99,27 @@ function Validator(options) {
                         // nếu có 1 số trường không yêu cầu nhập mà return như vậy là cout chuỗi rỗng
                         // return (value[input.name] = input.value) && value;
 
-                        value[input.name] = input.value; 
+                        switch(input.type) {
+                            case 'checkbox':
+                                if(!value[input.name]) {
+                                    value[input.name] = [];
+                                }
+                                if(input.checked) {
+                                    value[input.name].push(input.value);
+                                }
+                                break;
+                            case 'radio':
+                                if(input.checked) {
+                                    value[input.name] = input.value; 
+                                }
+                                break;
+                            case 'file':
+                                value[input.name] = input.files;
+                                break;
+                            default:
+                                value[input.name] = input.value; 
+                        }
+
                         return value; // oke nếu ngdung ko nhập email: {fullname: '123', email: '', password: '123123', password_confirmation: '123123'}
                     }, {});
 
@@ -111,17 +144,11 @@ function Validator(options) {
                 optionRules[rule.option] = [rule.test]; // do lần nó là 1 object rỗng nên
             } // nó là undefined và ta tạo với option đó là 1 cái mảng để lần sau có thể push thêm rule vào
 
-            // với mỗi rule nó là 1 cái hàm bên dưới cùng code gồm có option và test (above)
-            var inputEle = document.querySelector(rule.option); // VÍ DỤ 1 ÔNG LÀ #fullname VÀ #email THÌ ĐI QUA TỪNG RULE ĐỂ LẤY CÁI ELE ĐÓ RA
-            // console.log(inputEle);
-            //<input id="fullname" name="fullname" type="text" placeholder="VD: Sơn Đặng" class="form-control"></input>
-            //<input id="email" name="email" type="text" placeholder="VD: email@domain.com" class="form-control">
-            
-            // **** hoặc có thể cho nó 1 key value bên html: selector : 'form-message' và khi dùng tới chỉ cần chấm giống dòng rule.form
-            //var message = inputEle.parentElement.querySelector('.form-message'); // có được ele của 2 input truy ra thằng cha là thẻ div to ở ngoài, xoNG TỪ THẺ DIV ĐÓ TRUY VÀO THẰNG MESSAGE
-            
-            // tượng tự như trên kia, get lần ra ngoài tìm cha hợp lệ
-            var message = getParent(inputEle, '.form-group').querySelector('.form-message');
+        
+
+            // lấy nhiều thẻ chứ không còn 1 thẻ như trước nữa: ví dụ bây giờ nhiều thẻ gender
+            // sau đó đi qua forEach để if từng cái
+            var inputEles = document.querySelectorAll(rule.option); // VÍ DỤ 1 ÔNG LÀ #fullname VÀ #email THÌ ĐI QUA TỪNG RULE ĐỂ LẤY CÁI ELE ĐÓ RA
 
             // console.log(message); // <span class="form-message">Vui lòng nhập trường này!</span> : những thẻ span được viết sẵn để xuống dưới chèn message vào
 
@@ -142,19 +169,30 @@ function Validator(options) {
             //     }
             // }
 
-            if(inputEle) {
+            Array.from(inputEles).forEach(function(inputEle) {
+                // với mỗi rule nó là 1 cái hàm bên dưới cùng code gồm có option và test (above)
+                // var inputEle = document.querySelector(rule.option); // VÍ DỤ 1 ÔNG LÀ #fullname VÀ #email THÌ ĐI QUA TỪNG RULE ĐỂ LẤY CÁI ELE ĐÓ RA
+                // console.log(inputEle);
+                //<input id="fullname" name="fullname" type="text" placeholder="VD: Sơn Đặng" class="form-control"></input>
+                //<input id="email" name="email" type="text" placeholder="VD: email@domain.com" class="form-control">
+                // **** hoặc có thể cho nó 1 key value bên html: selector : 'form-message' và khi dùng tới chỉ cần chấm giống dòng rule.form
+                //var message = inputEle.parentElement.querySelector('.form-message'); // có được ele của 2 input truy ra thằng cha là thẻ div to ở ngoài, xoNG TỪ THẺ DIV ĐÓ TRUY VÀO THẰNG MESSAGE
+                
+                // tượng tự như trên kia, get lần ra ngoài tìm cha hợp lệ
+                var message = getParent(inputEle, '.form-group').querySelector('.form-message');
+                if(inputEle) {
+                    // season 2: thêm hàm validate : xử lý khi người dùng không còn focus vào form
+                    inputEle.onblur = function() { 
+                        validate(inputEle, rule, message);
+                    }
 
-                // season 2: thêm hàm validate : xử lý khi người dùng không còn focus vào form
-                inputEle.onblur = function() { 
-                    validate(inputEle, rule, message);
+                    // xử lý khi người dùng bắt đầu nhập mà vẫn còn thông báo lỗi (tức đang nhập cũng bị thông báo lỗi)
+                    inputEle.oninput = function() {
+                        message.innerText = '';
+                        getParent(message,options.formGroup).classList.remove('invalid');
+                    }
                 }
-
-                // xử lý khi người dùng bắt đầu nhập mà vẫn còn thông báo lỗi (tức đang nhập cũng bị thông báo lỗi)
-                inputEle.oninput = function() {
-                    message.innerText = '';
-                    getParent(message,options.formGroup).classList.remove('invalid');
-                }
-            }
+            })
         });
         // console.log(optionRules);
     }
@@ -168,7 +206,7 @@ Validator.isRequired = function(option, messageNotif) {
     return {
         option: option,
         test: function(value) {
-            return value.trim() ? undefined : messageNotif || "Vui lòng nhập trường này!";
+            return value ? undefined : messageNotif || "Vui lòng nhập trường này!";
         }
     };
 }
