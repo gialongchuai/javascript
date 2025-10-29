@@ -16,8 +16,6 @@
 
             <div class="form-group">
                 <label for="fullname" class="form-label">Tên đầy đủ</label>
-
-                <!--dù có lòng bao nhiêu div và cho input nằm trong vẫn thấy được form-group-->
                 <input id="fullname" name="fullname" type="text" placeholder="VD: Sơn Đặng" class="form-control">
                 <span class="form-message"></span>
             </div>
@@ -100,11 +98,10 @@
             }, 'Mật khẩu nhập lại không chính xác'),
             Validator.isRequired('#avatar'),
             Validator.isRequired('#province'),
-            Validator.isRequired('input[name="gender"]'), // mong muốn là input[name="gender"]:checked từng là được tick thì mới thỏa
-            Validator.isRequired('input[name="feeling"]') // mong muốn là input[name="feeling"]:checked từng là được tick thì mới thỏa
+            Validator.isRequired('input[name="gender"]'),
+            Validator.isRequired('input[name="feeling"]')
         ],
         onSubmit: function(data) {
-            // thay vì console.log dữ liệu bên kia gọi ra thì => call api backend
             console.log(data);            
         }
     });
