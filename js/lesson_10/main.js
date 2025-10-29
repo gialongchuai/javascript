@@ -44,6 +44,13 @@ function Validator(options) {
                 }
             });
 
+            var enableInputs = formElement.querySelectorAll('[name]');
+            console.log(enableInputs);
+
+            var formValues = Array.from(enableInputs).reduce(function(value, input) {
+                
+            }, {});
+
             // if(noError) {
             //     console.log('Không có lỗi');
             // } else {
