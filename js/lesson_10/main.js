@@ -14,14 +14,23 @@ function Validator(options) {
         if(errorMessage) { 
             message.innerText = errorMessage;
             // console.log(message.parentElement); 
-            message.parentElement.classList.add('invalid');
+            getParent(message,options.formGroup).classList.add('invalid');
         } else { 
             message.innerText = '';
             // console.log(message.parentElement);
-            message.parentElement.classList.remove('invalid');
+            getParent(message,options.formGroup).classList.remove('invalid');
         }
 
         return !errorMessage;
+    }
+
+    function getParent(element, selector) {
+        while(element.parentElement) {
+            if(element.parentElement.matches(selector)) {
+                return element.parentElement;
+            }
+            element = element.parentElement;
+        }
     }
 
     // console.log(options); // {form: '#form-1', rules: Array(2)}
@@ -37,7 +46,20 @@ function Validator(options) {
             // bên cạnh đó khi nhấn vào lặp qua từng rule rồi validate tất cả
             options.rules.forEach(function(rule) {
                 var inputEle = document.querySelector(rule.option);
-                var message = inputEle.parentElement.querySelector('.form-message');
+
+                // trường hợp getParent thành công khi thẻ cha vừa chạm 1 phát là đụng, tuy nhiên còn nhiều trường hợp thẻ lồng nên cần duyệt ra bên ngoài để chạm đến form_message nhé
+                // var message = inputEle.parentElement.querySelector('.form-message');
+
+                // 1 cái form-group ôm input và message,
+                // ta phải từ input tìm lần ra thằng cha là form-group, từ form-group mới 
+                // select lấy cái message, có thể đọc code ở trên, nên selector pải là form-group
+                // var message = getParent(inputEle, '.form-group').querySelector('.form-message');
+                // SỬA LẠI CODE MẤY CÁI KHÔNG FOCUS VÀO FORM, VÀ FOCUS VÀO FORM KHI NHẬP
+                // SỬA THÀNH ví dụ: getParent(message,options.formGroup).classList.remove('invalid');
+                // sửa all
+
+                // không nên hard-code như trên lỡ tên sai thì khó fix, tạo thêm 1 key value có gì sửa bên html và bên này không cần sửa nữa
+                var message = getParent(inputEle, options.formGroup).querySelector(options.formMessage);
                 var flag = validate(inputEle, rule, message);
                 if(!flag) {
                     noError = false;
@@ -59,7 +81,13 @@ function Validator(options) {
                      * NodeList(4) [input#fullname.form-control, input#email.form-control, input#password.form-control, input#password_confirmation.form-control]
                      */
                     var formValues = Array.from(enableInputs).reduce(function(value, input) {
-                        return (value[input.name] = input.value) && value;
+                        // nếu có 1 trường không nhập '' thì nó sẽ lấy và không return vế sau value nữa
+                        // do && tìm kiếm từ trái sang phải cái nào là false thì nó lụm
+                        // nếu có 1 số trường không yêu cầu nhập mà return như vậy là cout chuỗi rỗng
+                        // return (value[input.name] = input.value) && value;
+
+                        value[input.name] = input.value; 
+                        return value; // oke nếu ngdung ko nhập email: {fullname: '123', email: '', password: '123123', password_confirmation: '123123'}
                     }, {});
 
                     options.onSubmit(formValues); // options đó gọi tới onSubmit bên html mà bên đó tức là console.log(formValues);
@@ -90,7 +118,11 @@ function Validator(options) {
             //<input id="email" name="email" type="text" placeholder="VD: email@domain.com" class="form-control">
             
             // **** hoặc có thể cho nó 1 key value bên html: selector : 'form-message' và khi dùng tới chỉ cần chấm giống dòng rule.form
-            var message = inputEle.parentElement.querySelector('.form-message'); // có được ele của 2 input truy ra thằng cha là thẻ div to ở ngoài, xoNG TỪ THẺ DIV ĐÓ TRUY VÀO THẰNG MESSAGE
+            //var message = inputEle.parentElement.querySelector('.form-message'); // có được ele của 2 input truy ra thằng cha là thẻ div to ở ngoài, xoNG TỪ THẺ DIV ĐÓ TRUY VÀO THẰNG MESSAGE
+            
+            // tượng tự như trên kia, get lần ra ngoài tìm cha hợp lệ
+            var message = getParent(inputEle, '.form-group').querySelector('.form-message');
+
             // console.log(message); // <span class="form-message">Vui lòng nhập trường này!</span> : những thẻ span được viết sẵn để xuống dưới chèn message vào
 
             // bỏ focus -> console log hiển thị
@@ -120,7 +152,7 @@ function Validator(options) {
                 // xử lý khi người dùng bắt đầu nhập mà vẫn còn thông báo lỗi (tức đang nhập cũng bị thông báo lỗi)
                 inputEle.oninput = function() {
                     message.innerText = '';
-                    message.parentElement.classList.remove('invalid');
+                    getParent(message,options.formGroup).classList.remove('invalid');
                 }
             }
         });
