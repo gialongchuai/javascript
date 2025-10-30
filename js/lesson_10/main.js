@@ -1,7 +1,6 @@
-function Validator(formSelector, options) {
-    if(!options) {
-        options = {};
-    }
+function Validator(formSelector) {
+    var _this = this;
+    
     var formRules = {
         // mong muốn như sau:
         // fullname: 'required',
@@ -49,7 +48,7 @@ function Validator(formSelector, options) {
             }
         }
         if(isValid) {
-            if(typeof options.onSubmit === 'function') {
+            if(typeof _this.onSubmit === 'function') {
                 var enableInputs = formElement.querySelectorAll('[name]');
                 var formValues = Array.from(enableInputs).reduce(function(value, input) {
                     switch(input.type) {
@@ -75,7 +74,7 @@ function Validator(formSelector, options) {
 
                     return value;
                 }, {});
-                options.onSubmit(formValues);
+                _this.onSubmit(formValues);
             } else {
                 formElement.submit();
             }
