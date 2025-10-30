@@ -1,4 +1,7 @@
-function Validator(formSelector) {
+function Validator(formSelector, options) {
+    if(!options) {
+        options = {};
+    }
     var formRules = {
         // mong muốn như sau:
         // fullname: 'required',
@@ -34,6 +37,50 @@ function Validator(formSelector) {
     }
     
     var formElement = document.querySelector(formSelector);
+
+    formElement.onsubmit = function(event) {
+        event.preventDefault();
+
+        var isValid = false;
+        var inputs = formElement.querySelectorAll('[name][rules]'); // nodelist
+        for(var input of inputs) {
+            if(handleValidate({target: input})) {
+                isValid = true;
+            }
+        }
+        if(isValid) {
+            if(typeof options.onSubmit === 'function') {
+                var enableInputs = formElement.querySelectorAll('[name]');
+                var formValues = Array.from(enableInputs).reduce(function(value, input) {
+                    switch(input.type) {
+                        case 'checkbox':
+                            if(!value[input.name]) {
+                                value[input.name] = [];
+                            }
+                            if(input.checked) {
+                                value[input.name].push(input.value);
+                            }
+                            break;
+                        case 'radio':
+                            if(input.checked) {
+                                value[input.name] = input.value; 
+                            }
+                            break;
+                        case 'file':
+                            value[input.name] = input.files;
+                            break;
+                        default:
+                            value[input.name] = input.value; 
+                    }
+
+                    return value;
+                }, {});
+                options.onSubmit(formValues);
+            } else {
+                formElement.submit();
+            }
+        }
+    }
 
     // console.log(formElement); // chỉ xử lý nếu fomr tồn tại, nếu truyền không đúng id sẽ là null
     if(formElement) { // đã lấy đúng form đó -> tìm input trong fomr đó nên query từ formEle
@@ -79,21 +126,42 @@ function Validator(formSelector) {
             }
 
             // Lắng nghe các sự kiến (blur, change, ...)
-            input.onblur = handleValidate;
+            input.onblur = handleValidate; // valid khi người dùng bỏ focus
+
+            input.oninput = handleClearMessage; // khi người dùng nhập lại phải clear mess error
+        }
+        // Kiểm tra formRules đúng nguyện vọng
+        // console.log(formRules); // {fullname: 'required', email: 'required|email', password: 'required|min:6'}
+        // for(var formRule in formRules) { // fullname required \n email required|email \n password required|min:6
+        //     console.log(formRule + ' ' + formRules[formRule]);
+        // }
+    }
+
+    function handleClearMessage(event) {
+        var elementInput = event.target;
+        var elementFormGroup = findFamily(elementInput, '.form-group');
+        if(elementFormGroup.classList.contains('invalid')) {
+            elementFormGroup.classList.remove('invalid');
+        }
+        var message = elementFormGroup.querySelector('.form-message');
+        if(message) {
+            message.innerHTML = '';
+            elementFormGroup.classList.remove('invalid');
+        }
+    }
+
+    function handleValidate(event) {
+        var elementInput = event.target; // trả về cái thẻ input
+        var rules = formRules[elementInput.name];
+        
+        var errorMessage;
+        for(var rule of rules) {
+            errorMessage = rule(elementInput.value);
+            if(errorMessage) break;
         }
 
-        function handleValidate(event) {
-
-            var elementInput = event.target; // trả về cái thẻ input
-            var rules = formRules[elementInput.name];
-            
-            var errorMessage;
-            for(var rule of rules) {
-                errorMessage = rule(elementInput.value);
-                if(errorMessage) break;
-            }
-
-            var elementFormGroup = findFormGroup(elementInput);
+        var elementFormGroup = findFamily(elementInput, '.form-group');
+        if(elementFormGroup) {
             var message = elementFormGroup.querySelector('.form-message');
             if(errorMessage) {
                 message.innerHTML = errorMessage;
@@ -103,20 +171,15 @@ function Validator(formSelector) {
                 elementFormGroup.classList.remove('invalid');
             }
         }
+        return !errorMessage;
+    }
 
-        function findFormGroup(elementInput) {
-            while(elementInput.parentElement) {
-                if(elementInput.parentElement.matches('.form-group')) {
-                    return elementInput.parentElement;
-                }
-                elementInput = elementInput.parentElement;
-            } 
-        }
-
-        // Kiểm tra formRules đúng nguyện vọng
-        // console.log(formRules); // {fullname: 'required', email: 'required|email', password: 'required|min:6'}
-        // for(var formRule in formRules) { // fullname required \n email required|email \n password required|min:6
-        //     console.log(formRule + ' ' + formRules[formRule]);
-        // }
+    function findFamily(child, family) {
+        while(child.parentElement) {
+            if(child.parentElement.matches(family)) {
+                return child.parentElement;
+            }
+            child = child.parentElement;
+        } 
     }
 }

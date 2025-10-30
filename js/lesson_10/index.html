@@ -83,7 +83,11 @@
 
 <script>
 
-    Validator('#form-register')
+    Validator('#form-register', {
+        onSubmit: function(data) {
+            console.log(data);
+        }
+    })
 
 </script>
 
