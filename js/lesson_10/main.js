@@ -83,9 +83,35 @@ function Validator(formSelector) {
         }
 
         function handleValidate(event) {
-            console.log(event);
+
+            var elementInput = event.target; // trả về cái thẻ input
+            var rules = formRules[elementInput.name];
+            
+            var errorMessage;
+            for(var rule of rules) {
+                errorMessage = rule(elementInput.value);
+                if(errorMessage) break;
+            }
+
+            var elementFormGroup = findFormGroup(elementInput);
+            var message = elementFormGroup.querySelector('.form-message');
+            if(errorMessage) {
+                message.innerHTML = errorMessage;
+                elementFormGroup.classList.add('invalid');
+            } else {
+                message.innerHTML = '';
+                elementFormGroup.classList.remove('invalid');
+            }
         }
-        console.log(formRules);
+
+        function findFormGroup(elementInput) {
+            while(elementInput.parentElement) {
+                if(elementInput.parentElement.matches('.form-group')) {
+                    return elementInput.parentElement;
+                }
+                elementInput = elementInput.parentElement;
+            } 
+        }
 
         // Kiểm tra formRules đúng nguyện vọng
         // console.log(formRules); // {fullname: 'required', email: 'required|email', password: 'required|min:6'}
