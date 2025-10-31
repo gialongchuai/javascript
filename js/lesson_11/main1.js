@@ -13,13 +13,24 @@ var promise = new Promise(
         // resolve(123);
 
 
-        reject(error);
+        resolve(); // lần lượt in 1 2 3 Done
     }
 );
 
 promise
     .then(function(data) {
-        console.log('successfully! ' + data)
+        return 1;
+    })
+    .then(function(data) {
+        console.log(data); // 1
+        return 2;
+    })
+    .then(function(data) {
+        console.log(data); // 2
+        return 3;
+    })
+    .then(function(data) {
+        console.log(data); // 3
     })
     .catch(function(error) {
         console.log('failure! ' + error)
@@ -27,3 +38,7 @@ promise
     .finally(function() {
         console.log('done!')
     });
+
+function sleep(ms) {
+    
+}
