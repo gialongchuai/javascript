@@ -48,12 +48,3 @@ function showArr([a, b, ...params]) {
 }
 
 showArr([1,2,3,4,4,5]);
-
-
-var arr1 = ['Java', 'C++'];
-var arr2 = ['Javascript', 'Csharp'];
-
-var arrRe1 = arr1.concat(arr2);
-var arrRe2 = [...arr1, ...arr2];
-console.log(arrRe1);
-console.log(arrRe2);
