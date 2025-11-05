@@ -14,6 +14,21 @@
       "id": "94b5",
       "name": "Node & ExpressJS",
       "description": "Học Back-end với Node & ExpressJS framework, hiểu các khái niệm khi làm Back-end và xây dựng RESTful API cho trang web."
+    },
+    {
+      "id": "e198",
+      "name": "Lập trình C++ cơ bản, nâng cao",
+      "description": "Khóa học lập trình C++ từ cơ bản tới nâng cao dành cho người mới bắt đầu. Mục tiêu của khóa học này nhằm giúp các bạn nắm được các khái niệm căn cơ của lập trình, giúp các bạn có nền tảng vững chắc để chinh phục con đường trở thành một lập trình viên."
+    },
+    {
+      "id": "9134",
+      "name": "abc",
+      "description": "2131314"
+    },
+    {
+      "id": "1594",
+      "name": "khóa học c++",
+      "description": "bài này quá cơ bản?"
     }
   ]
 }
