@@ -52,7 +52,10 @@ getComments()
     .then(function(cmt) {
         // console.log(cmt); // mảng chứa các obj của cmt
         var userIds = cmt.map(e => e.user_id);
-        
+
+        console.log(cmt);
+        console.log(userIds);
+
         return getUsersByIds(userIds)
             .then(function(users) {
                 return {
