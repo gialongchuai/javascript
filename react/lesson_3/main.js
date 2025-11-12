@@ -52,5 +52,5 @@ const ulReact = React.createElement(
         'ReactJS'
     )
 )
-ReactDOM.render(h1React     , root2);
+ReactDOM.render(h1React, root2);
 ReactDOM.render(ulReact, root3);
