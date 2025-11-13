@@ -275,13 +275,13 @@ function PostItem({ // lưu ý là truyền theo destructuring thì cái tên qu
     props // truyền bằng ông props trong đó props là đối tượng post trong post mới đúng
 }) { // không phải kiểu truyền hàm, không phải như này function say(a) say(6) // này là destructuring :((()))
     
-    return ( // đúng hơn là bao thẻ img bằng thẻ li vào
-        <ul> 
-            <li>{props.title}</li>
-            <li>{props.meta_title}</li>
+    return ( // Sửa lại thẻ cho đẹp
+        <div> 
+            <h2>{props.title}</h2>
+            <h3>{props.meta_title}</h3>
             <img src={props.thumbnail_url} alt="" /> 
-            <li>{props.meta_description}</li>
-        </ul>
+            <p>{props.meta_description}</p>
+        </div>
     )
 }
 
