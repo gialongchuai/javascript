@@ -277,7 +277,9 @@ function PostItem({ // lưu ý là truyền theo destructuring thì cái tên qu
     
     return ( // Sửa lại thẻ cho đẹp
         <div> 
-            <h2>{props.title}</h2>
+            <h2 onClick={
+                console.log(props.title)
+            }>{props.title}</h2>
             <h3>{props.meta_title}</h3>
             <img src={props.thumbnail_url} alt="" /> 
             <p>{props.meta_description}</p>
