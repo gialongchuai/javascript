@@ -1,6 +1,6 @@
-// PostItem.js
 
-function PostItem() {
+
+function PostItem() { // react component
     return (
             <div className="post-item">
             <img 
