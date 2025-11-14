@@ -1,8 +1,8 @@
 
-function Button({title, primary}) { // Props default to "true"
+function Button({title, primary, children}) { // Props default to "true"
     console.log(primary); // cô Minh Thu do không định nghĩa thì y chang commit vừa rồi trả undefined
     return ( // còn đối với Huyền Trang thì mặc định không nói gì là true
-        <button>{title}</button>
+        <button>{title||children}</button>
     )
 }
 
@@ -47,6 +47,18 @@ function App() {
                 type="text"
                 placeholder="...Huyền Trang"
             /> {/**truyền theo expression nè! */}
+
+            {/**Children prop  *    
+             *  <YourComponent>String literals</YourComponent>
+             *  <YourComponent>{expression}</YourComponent>
+             * 
+             * Nhớ lại mấy bài trước thì việc viết <Button /> là viết tắt bên dưới
+             * tức là gọi tới func com truyền vào 1 string literals mà console log thì 
+             * đó là children, nên func Button bổ sung thêm 1 children nếu có, lưu ý tên phải giống do nó nhận là object với key
+             * là children từ đó nếu không có title thì || lấy vế sau là xin chào các em
+            */}
+            <Button>Xin chào các em!</Button>
+            <Button>{title}</Button>
         </div>
     )
 }
