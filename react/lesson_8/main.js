@@ -193,27 +193,37 @@ const courses = [
 
 // Dom event + react
 
-function Courses({props}) {
+// UI Component
+function Courses({props, onClick}) {
     return (
         <div>
-            <h2 onClick={ () => 
-                alert(props.title)
-            }>{props.title}</h2>
+            <h2 onClick={() => onClick(props.title)}>{props.title}</h2>
             <h3>{props.description}</h3>
             <img src={props.image_url}/>
         </div>
     )
 }
 
-const jsx = (
-    <div className="wrapper">
-        {
-            courses.map(course => {
-                return <Courses props={course} key={course.id}/>
-            })
-        }
-    </div>
-)
+// Container
+function App() {
 
+    const handleAlert = (data) => {
+      alert(data);
+    }
 
-ReactDOM.render(jsx, document.querySelector('#root'));
+    return (
+        <div className="wrapper">
+          {
+              courses.map(course => {
+                  return <Courses 
+                    onClick={handleAlert} 
+                    props={course} 
+                    key={course.id}
+                  />
+              })
+          }
+        </div>
+    )
+}
+    
+ReactDOM.render(<App />, document.querySelector('#root'));
