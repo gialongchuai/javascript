@@ -29,11 +29,41 @@ function Input2({title, ...rest}) { // có nghĩa hứng qua ... truyền vào h
     )
 }
 
+function ListTeacher({teacher}) {  //**duyệt qua từng cô giáo cách bình thường dùng map */}
+    return ( // lấy tên cô giáo làm key luôn
+        <ul>
+            {teacher.map((coGiao => <li key={coGiao}>{coGiao}</li>))}
+        </ul>
+    )
+}
+
+function DanhSachGiangVien({data, children}) { // do children thì gọi 
+    return ( // callback lại thôi (mỗi phần tử trong data là 1 giáo viên)
+        <ul>
+            {data.map(giangVien => children(giangVien))} 
+        </ul>
+    )
+}
+
 function App() {
     let title = 'Em chào cô Huyền Trang';
 
+    const giangVien = ['Huyền Trang', 'Minh Thu'];
+
     return (
         <div className="wrapper">
+            <ListTeacher teacher={giangVien} /> {/**duyệt qua từng cô giáo cách bình thường dùng map */}
+
+            {/**Render props: truyền function qua children (
+             * Vậy phải có thẻ đóng mở nó mới lọt vào children như Button
+             * ở đây callback không có gì là không hiểu cả 
+            ) */}
+            <DanhSachGiangVien data={giangVien}>
+                {
+                    (coGiao => <li key={coGiao}>{coGiao}</li>) // children là 1 func gọi lại thì return ra li coGiao thôi
+                }
+            </DanhSachGiangVien>
+
             <Button title="Em chào cô Minh Thu" /> {/** truyền theo string literals */}
 
             <br></br>
