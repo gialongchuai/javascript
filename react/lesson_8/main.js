@@ -259,7 +259,7 @@ function Button({ // hàm xử lý nếu có href thì chuyển nó thành thẻ
 }
 
 // Container
-function App() {
+function App({title}) {
 
   const handleAlert = (data) => {
     alert(data);
@@ -268,8 +268,12 @@ function App() {
   const type = 'Input';
   const Component = Form[type];
 
-  return (
+  return ( // nếu không có tilte thì lấy default vế sau toán tử
+    // nói chung là react đi tìm thằng khác 7 thằng gì đó thì phải
+    // với toán tử || thì nó tìm khác in ra, nếu không có all thì nó là undefined và nó không in ra gì cả
+    // có thể chatLGBT cho lẹ toán tử && nữa 
     <div className="wrapper">
+      <div>{title || 'Lớp học trực tuyến'}</div>
       <Form.Input />
       <Form.Checkbox />
       <Component />
@@ -299,4 +303,4 @@ function App() {
   )
 }
 
-ReactDOM.render(<App />, document.querySelector('#root'));
+ReactDOM.render(<App title="Lớp giảng dạy của cô giáo Huyền Trang" />, document.querySelector('#root'));
