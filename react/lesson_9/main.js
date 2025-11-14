@@ -6,6 +6,29 @@ function Button({title, primary}) { // Props default to "true"
     )
 }
 
+function Input({title, type, placeholder}) {
+    return (
+        <div>
+            <label>{title}</label>
+            <input type={type} name="" id="" placeholder={placeholder} />
+            <br></br><br></br>
+
+            {/**truyền theo kiểu  * Spreadd/Rest props */}
+            <Input2 title={title} type={type} placeholder={placeholder} />
+        </div> 
+    )
+}
+
+function Input2({title, ...rest}) { // có nghĩa hứng qua ... truyền vào hết cho input cho khỏe
+    return (
+        <div> {/**truyền theo kiểu  * Spreadd/Rest props */}
+            <label>{title}</label>
+            <input {...rest} />
+        </div> 
+        
+    )
+}
+
 function App() {
     let title = 'Em chào cô Huyền Trang';
 
@@ -17,6 +40,13 @@ function App() {
             <br></br>
 
             <Button primary title={title} /> {/**truyền theo expression */}
+            <br></br><br></br>
+            
+            <Input 
+                title={"Nhập tên giảng viên: "} 
+                type="text"
+                placeholder="...Huyền Trang"
+            /> {/**truyền theo expression nè! */}
         </div>
     )
 }
